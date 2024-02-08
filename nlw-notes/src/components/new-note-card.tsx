@@ -3,7 +3,11 @@ import { X } from 'lucide-react'
 import { ChangeEvent, useState, FormEvent } from 'react'
 import { toast } from 'sonner'
 
-export function NewNoteCard() {
+interface newNoteProps {
+  onNoteCreated: (content: string) => void
+}
+
+export function NewNoteCard({ onNoteCreated }: newNoteProps) {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true)
   const [content, setContent] = useState('')
 
@@ -22,7 +26,10 @@ export function NewNoteCard() {
   function handleSaveNote(event: FormEvent) {
     event.preventDefault()
 
-    console.log(content)
+    onNoteCreated(content)
+
+    setContent('')
+    setShouldShowOnboarding(true)
 
     toast.success('Nota criada com sucesso!')
   }
@@ -53,13 +60,14 @@ export function NewNoteCard() {
 
               {shouldShowOnboarding ? (
                 <p className='text-sm leading-6 text-slate-400'>
-                Comece <button className='font-medium text-lime-400 hover:underline'>gravando uma nota</button> em áudio ou se preferir <button onClick={handleStartEditor} className='font-medium text-lime-400 hover:underline'>utilize apenas texto</button>.
+                  Comece <button className='font-medium text-lime-400 hover:underline'>gravando uma nota</button> em áudio ou se preferir <button onClick={handleStartEditor} className='font-medium text-lime-400 hover:underline'>utilize apenas texto</button>.
               </p>
               ) : (
                 <textarea
-                autoFocus
-                className='text-sm leading-6 text-slate-400 resize-none bg-transparent flex-1 outline-none'
-                onChange={handleContentChanged}
+                  autoFocus
+                  className='text-sm leading-6 text-slate-400 resize-none bg-transparent flex-1 outline-none'
+                  onChange={handleContentChanged}
+                  value={content}
                 />
                 )}
             </div>
